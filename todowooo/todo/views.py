@@ -15,7 +15,6 @@ def signupuser(request):
     if request.method == 'GET':
         return render(request, 'todo/signupuser.html', {'from': UserCreationForm()})
     else:
-
         if request.POST['password1'] == request.POST['password2']:
             try:
                 user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
@@ -31,12 +30,6 @@ def signupuser(request):
                           {'from': UserCreationForm(), 'error': 'Пароль не совпадал'})
 
 
-def logoutuser(request):
-    if request.method == 'POST':
-        logout(request)
-        return redirect('home')
-
-
 def loginuser(request):
     if request.method == 'GET':
         return render(request, 'todo/loginuser.html', {'from': AuthenticationForm()})
@@ -48,6 +41,12 @@ def loginuser(request):
         else:
             login(request, user)
             return redirect('currenttodos')
+
+
+def logoutuser(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
 
 
 def createtodo(request):
@@ -65,5 +64,7 @@ def createtodo(request):
 
 
 def currenttodos(request):
-    todos = Todo.objects.all()
-    return render(request, 'todo/currenttodos.html', {'todos': todos})
+    todos = {
+        'todos': Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+    }
+    return render(request, 'todo/currenttodos.html', todos)
