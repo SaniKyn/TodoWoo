@@ -2,6 +2,11 @@
 
 Вошел в систему пользователь {{ user.username }}
 
+<a href="{% url 'home' %}">Главная страница</a>
+<a href="{% url 'createtodo' %}">Создать</a>
+<a href="{% url 'currenttodos' %}">Текущие дела</a>
+<a href="{% url 'completedtodos' %}">Выполненые дела</a>
+
 <form action="{% url 'logoutuser' %}" method="POST">
     {% csrf_token %}
     <button type="submit">
